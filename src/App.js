@@ -23,42 +23,47 @@ function App() {
   };
 
   return (
-    <div className="min-w-screen flex flex-col items-center min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
-      <h2 className="text-[2rem] font-bold text-blue-600 text-center mb-3">
+    <div className="min-w-screen flex flex-col items-center min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-6">
+      <h2 className="text-3xl md:text-4xl font-bold text-blue-600 text-center mb-4">
         Lyrics Finder
       </h2>
-      <p className="text-center font-bold text-white mb-9">
-        Please input the correct artist name and song to ensure accurate result!!
+      <p className="text-center font-bold text-white mb-8 text-sm md:text-base">
+        Please input the correct artist name and song to ensure accurate results!
       </p>
-      <div className="flex  gap-5 justify-center mb-5 flex-col">
-        <label for="" className="flex flex-col text-xs text-gray-500  font-bold">
-          Artist:
+
+      <div className="flex flex-col gap-4 justify-center items-center w-full max-w-md">
+        <label className="flex flex-col text-xs text-gray-400 font-bold w-full">
+          <span className="self-center">Artist:</span>
           <input
             type="text"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Artist"
-            className=" border-2 rounded-lg p-2 border-blue-600 text-black outline-none placeholder:text-black placeholder:text-center   "
+            className="border-2 rounded-lg p-2 border-blue-600  outline-none  text-black text-base self-center placeholder:text-center placeholder:text-gray-500 w-1/2 focus:ring-2 focus:ring-blue-600"
           />
         </label>
-        <label for="" className="flex flex-col text-xs font-bold text-gray-500">
-          Song:
-        <input
-          type="text"
-          value={song}
-          onChange={(e) => setSong(e.target.value)}
-          placeholder="Song"
-          className=" border-2 rounded-lg p-2 border-blue-600 text-black  placeholder:text-black placeholder:text-center   outline-none"
-        />
-         </label>
+        <label className="flex flex-col  text-xs text-gray-400 font-bold w-full">
+          <span className="self-center">Song:</span>
+          <input
+            type="text"
+            value={song}
+            onChange={(e) => setSong(e.target.value)}
+            placeholder="Song"
+            className="border-2 rounded-lg p-2 border-blue-600 outline-none  text-black text-base self-center placeholder:text-center placeholder:text-gray-500 w-1/2 focus:ring-2 focus:ring-blue-600"
+          />
+        </label>
       </div>
+
       <button
-        onClick={() => searchLyrics()}
-        className="p-2 px-6 bg-blue-700 rounded-lg text-white font-bold hover:bg-blue-900 "
+        onClick={searchLyrics}
+        className="mt-6 p-2 px-6 bg-blue-700 rounded-lg text-white font-bold hover:bg-blue-900 transition duration-200"
       >
         Find
       </button>
-      <pre className="text-white font-bold mt-6 text-center text-[8px] sm:text-sm">{lyrics}</pre>
+
+      <pre className="text-white font-bold mt-8 text-xs sm:text-sm text-center whitespace-pre-wrap max-w-full overflow-auto">
+        {lyrics}
+      </pre>
     </div>
   );
 }
