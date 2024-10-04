@@ -39,7 +39,7 @@ function App() {
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
             placeholder="Artist"
-            className="border-2 rounded-lg p-2 border-blue-600  outline-none  text-black text-base self-center placeholder:text-center placeholder:text-gray-500 w-1/2 focus:ring-2 focus:ring-blue-600"
+            className="border-2 rounded-lg p-2 border-blue-600  outline-none  text-black text-base self-center placeholder:text-left placeholder:pl-3 placeholder:text-gray-500 w-[70%] focus:ring-2 focus:ring-blue-600"
           />
         </label>
         <label className="flex flex-col  text-xs text-gray-400 font-bold w-full">
@@ -49,7 +49,7 @@ function App() {
             value={song}
             onChange={(e) => setSong(e.target.value)}
             placeholder="Song"
-            className="border-2 rounded-lg p-2 border-blue-600 outline-none  text-black text-base self-center placeholder:text-center placeholder:text-gray-500 w-1/2 focus:ring-2 focus:ring-blue-600"
+            className="border-2 rounded-lg p-2 border-blue-600 outline-none  text-black text-base self-center placeholder:text-left placeholder:pl-3 placeholder:text-gray-500 w-[70%] focus:ring-2 focus:ring-blue-600"
           />
         </label>
       </div>
