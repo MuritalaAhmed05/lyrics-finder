@@ -30,7 +30,7 @@ function App() {
       <p className="text-center font-bold text-white mb-9">
         Please input the correct artist name and song to ensure accurate result!!
       </p>
-      <div className="flex  gap-5 justify-center mb-5">
+      <div className="flex  gap-5 justify-center mb-5 flex-col">
         <input
           type="text"
           value={artist}
