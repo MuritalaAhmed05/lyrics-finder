@@ -52,7 +52,7 @@ function App() {
       >
         Find
       </button>
-      <pre className="text-white font-bold mt-6 text-center">{lyrics}</pre>
+      <pre className="text-white font-bold mt-6 text-center text-xs sm:text-sm">{lyrics}</pre>
     </div>
   );
 }
