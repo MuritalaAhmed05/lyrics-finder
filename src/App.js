@@ -31,20 +31,26 @@ function App() {
         Please input the correct artist name and song to ensure accurate result!!
       </p>
       <div className="flex  gap-5 justify-center mb-5 flex-col">
-        <input
-          type="text"
-          value={artist}
-          onChange={(e) => setArtist(e.target.value)}
-          placeholder="Artist"
-          className=" border-2 rounded-lg p-2 border-blue-600  outline-none"
-        />
+        <label for="" className="flex flex-col text-xs text-gray-500  font-bold">
+          Artist:
+          <input
+            type="text"
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
+            placeholder="Artist"
+            className=" border-2 rounded-lg p-2 border-blue-600 text-black outline-none placeholder:text-black placeholder:text-center   "
+          />
+        </label>
+        <label for="" className="flex flex-col text-xs font-bold text-gray-500">
+          Song:
         <input
           type="text"
           value={song}
           onChange={(e) => setSong(e.target.value)}
           placeholder="Song"
-          className=" border-2 rounded-lg p-2 border-blue-600  outline-none"
+          className=" border-2 rounded-lg p-2 border-blue-600 text-black  placeholder:text-black placeholder:text-center   outline-none"
         />
+         </label>
       </div>
       <button
         onClick={() => searchLyrics()}
@@ -52,7 +58,7 @@ function App() {
       >
         Find
       </button>
-      <pre className="text-white font-bold mt-6 text-center text-xs sm:text-sm">{lyrics}</pre>
+      <pre className="text-white font-bold mt-6 text-center text-[8px] sm:text-sm">{lyrics}</pre>
     </div>
   );
 }
