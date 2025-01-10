@@ -1,89 +1,145 @@
-import "./App.css";
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Search, Music2, AlertCircle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-function App() {
+const App = () => {
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [lyrics, setLyrics] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Fetch lyrics from the API
   const searchLyrics = async () => {
     if (!artist.trim() || !song.trim()) {
-      setLyrics("Please enter both artist and song.");
+      setError("Please enter both artist and song name");
       return;
     }
-
+    
     setLoading(true);
-    setLyrics(""); // Clear previous lyrics
+    setLyrics("");
+    setError("");
+    
     try {
       const res = await fetch(
         `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(song)}`
       );
+      
+      if (!res.ok) {
+        throw new Error('Failed to fetch lyrics');
+      }
+      
       const data = await res.json();
-
       if (data.lyrics) {
         setLyrics(data.lyrics);
       } else {
-        setLyrics("No lyrics found. Please check the artist and song name.");
+        setError("No lyrics found. Please check the artist and song name.");
       }
     } catch (err) {
       console.error("Error fetching lyrics", err);
-      setLyrics("Failed to fetch lyrics. Please try again later.");
+      setError("Failed to fetch lyrics. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      searchLyrics();
+    }
+  };
+
   return (
-    <div className="min-w-screen flex flex-col items-center min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-6">
-      <h2 className="text-3xl md:text-4xl font-bold text-blue-600 text-center mb-4">
-        Lyrics Finder
-      </h2>
-      <p className="text-center font-bold text-white mb-8 text-sm md:text-base">
-        Please input the correct artist name and song to ensure accurate results!
-      </p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-blue-900 p-6">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center space-y-4 mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            Lyrics Finder
+          </h1>
+          <p className="text-gray-300 text-sm md:text-base">
+            Discover song lyrics instantly with our professional search engine
+          </p>
+        </div>
 
-      {/* Input Fields */}
-      <div className="flex flex-col gap-4 justify-center items-center w-full max-w-md">
-        <label className="flex flex-col text-xs text-gray-400 font-bold w-full">
-          <span className="self-center">Artist:</span>
-          <input
-            type="text"
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
-            placeholder="Artist"
-            aria-label="Artist"
-            className="border-2 rounded-lg p-2 border-blue-600 outline-none text-black text-base self-center placeholder:text-left placeholder:pl-3 placeholder:text-gray-500 w-[70%] focus:ring-2 focus:ring-blue-600"
-          />
-        </label>
-        <label className="flex flex-col text-xs text-gray-400 font-bold w-full">
-          <span className="self-center">Song:</span>
-          <input
-            type="text"
-            value={song}
-            onChange={(e) => setSong(e.target.value)}
-            placeholder="Song"
-            aria-label="Song"
-            className="border-2 rounded-lg p-2 border-blue-600 outline-none text-black text-base self-center placeholder:text-left placeholder:pl-3 placeholder:text-gray-500 w-[70%] focus:ring-2 focus:ring-blue-600"
-          />
-        </label>
+        <Card className="bg-white/10 backdrop-blur-lg border-none shadow-2xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Music2 className="w-5 h-5" />
+              Search Lyrics
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid gap-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={artist}
+                  onChange={(e) => setArtist(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Artist name"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+              
+              <div className="relative">
+                <input
+                  type="text"
+                  value={song}
+                  onChange={(e) => setSong(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Song title"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={searchLyrics}
+              disabled={loading}
+              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:from-blue-700 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search className="w-5 h-5" />
+                  Search Lyrics
+                </>
+              )}
+            </button>
+
+            {error && (
+              <Alert variant="destructive" className="bg-red-900/50 border-red-600 text-white">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
+
+        {lyrics && (
+          <Card className="mt-6 bg-white/10 backdrop-blur-lg border-none shadow-2xl">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Music2 className="w-5 h-5" />
+                {artist} - {song}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-black/20 rounded-lg p-6">
+                <pre className="text-gray-200 font-sans whitespace-pre-wrap break-words">
+                  {lyrics}
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
-
-      {/* Search Button */}
-      <button
-        onClick={searchLyrics}
-        className="mt-6 p-2 px-6 bg-blue-700 rounded-lg text-white font-bold hover:bg-blue-900 transition duration-200"
-      >
-        {loading ? "Searching..." : "Find"}
-      </button>
-
-      {/* Lyrics Display */}
-      <pre className="text-white font-bold mt-8 text-xs sm:text-sm text-center whitespace-pre-wrap max-w-full overflow-auto">
-        {lyrics}
-      </pre>
     </div>
   );
-}
+};
 
 export default App;
