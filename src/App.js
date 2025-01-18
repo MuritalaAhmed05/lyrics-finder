@@ -15,14 +15,15 @@ const CustomAlert = ({ message }) => (
 );
 
 const App = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [artist, setArtist] = useState("");
+  const [song, setSong] = useState("");
   const [songData, setSongData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const searchLyrics = async () => {
-    if (!searchQuery.trim()) {
-      setError("Please enter a song to search");
+    if (!artist.trim() || !song.trim()) {
+      setError("Please enter both artist and song name");
       return;
     }
     
@@ -32,7 +33,7 @@ const App = () => {
     
     try {
       const res = await fetch(
-        `https://api.nexoracle.com/search/lyrics?apikey=4aeb57e3ed0f238762&q=${encodeURIComponent(searchQuery)}`
+        `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(song)}`
       );
       
       if (!res.ok) {
@@ -40,8 +41,12 @@ const App = () => {
       }
       
       const data = await res.json();
-      if (data.status === 200 && data.result) {
-        setSongData(data.result);
+      if (data.lyrics) {
+        setSongData({
+          title: song,
+          artist: artist,
+          lyrics: data.lyrics
+        });
       } else {
         setError("No lyrics found. Please try a different search.");
       }
@@ -62,6 +67,7 @@ const App = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-blue-900 p-6">
       <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 text-center ">Made with 💖 by <a href='https://portfolio-v2-ashy-delta-91.vercel.app/' className='underline text-blue-700'>Ahmed</a> </h1>
         {/* Header Section */}
         <div className="text-center space-y-4 mb-8">
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 animate-gradient">
@@ -80,17 +86,32 @@ const App = () => {
               <h2 className="text-xl font-semibold text-white">Search Lyrics</h2>
             </div>
 
-            <div className="group relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Enter song name or lyrics"
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-400 
-                         focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200
-                         group-hover:bg-white/10"
-              />
+            <div className="space-y-4">
+              <div className="group relative">
+                <input
+                  type="text"
+                  value={artist}
+                  onChange={(e) => setArtist(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Enter artist name"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-400 
+                           focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200
+                           group-hover:bg-white/10"
+                />
+              </div>
+
+              <div className="group relative">
+                <input
+                  type="text"
+                  value={song}
+                  onChange={(e) => setSong(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Enter song name"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-400 
+                           focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200
+                           group-hover:bg-white/10"
+                />
+              </div>
             </div>
 
             <button
@@ -120,18 +141,9 @@ const App = () => {
         {/* Lyrics Display Section */}
         {songData && (
           <CustomCard className="mt-6">
-            <div className="flex items-center gap-4 mb-4">
-              {songData.image && (
-                <img 
-                  src={songData.image} 
-                  alt={songData.title}
-                  className="w-16 h-16 rounded-lg object-cover"
-                />
-              )}
-              <div>
-                <h2 className="text-xl font-semibold text-white">{songData.title}</h2>
-                <p className="text-gray-300">{songData.artist}</p>
-              </div>
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-white">{songData.title}</h2>
+              <p className="text-gray-300">{songData.artist}</p>
             </div>
             <div className="bg-black/20 rounded-lg p-6">
               <pre className="text-gray-200 font-sans whitespace-pre-wrap break-words leading-relaxed">
